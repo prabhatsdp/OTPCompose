@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
  * @param digitContainerStyle The style configuration for the digit containers.
  * @param textStyle The style configuration for the text within the digit containers.
  * @param isError Whether the OTP field is in an error state.
+ * @param onOtpCompleted Called when the OTP field is completed.
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -73,6 +74,7 @@ fun OTPTextField(
         fontSize = 28.sp
     ),
     isError: Boolean = false,
+    onOtpCompleted: (Boolean) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -106,6 +108,11 @@ fun OTPTextField(
             }
             if (it.length >= numDigits) {
                 focusManager.clearFocus()
+            }
+            if (it.length == numDigits) {
+                onOtpCompleted.invoke(true)
+            } else {
+                onOtpCompleted.invoke(false)
             }
         },
         keyboardOptions = KeyboardOptions(
